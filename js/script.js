@@ -11,6 +11,9 @@ const otherJobRole = document.querySelector('#other-job-role')
 const shirtDesign = document.querySelector('#design')
 const shirtColor = document.querySelector('#shirt-colors')
 const colorOptions = document.querySelector('#color')
+const registerForActivities = document.querySelector('#activities')
+let totalCost = document.querySelector('#activities-cost')
+let sumOfCost = 0
 otherJobRole.style.display = 'none'
 shirtColor.style.display = 'none'
 
@@ -53,4 +56,16 @@ shirtDesign.addEventListener('change', (e) => {
       }
     }
   }
+})
+
+registerForActivities.addEventListener('change', (e) => {
+  const dataCost = e.target
+  let activityCost = +dataCost.getAttribute('data-cost')
+
+  if (dataCost.checked) {
+    sumOfCost += activityCost
+  } else {
+    sumOfCost -= activityCost
+  }
+  totalCost.innerHTML = `Total: $${sumOfCost}`
 })
