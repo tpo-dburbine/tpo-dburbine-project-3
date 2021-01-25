@@ -12,10 +12,18 @@ const shirtDesign = document.querySelector('#design')
 const shirtColor = document.querySelector('#shirt-colors')
 const colorOptions = document.querySelector('#color')
 const registerForActivities = document.querySelector('#activities')
-let totalCost = document.querySelector('#activities-cost')
+const totalCost = document.querySelector('#activities-cost')
+const payType = document.querySelector('#payment')
+const creditCard = document.querySelector('#credit-card')
+const paypal = document.querySelector('#paypal')
+const bitcoin = document.querySelector('#bitcoin')
 let sumOfCost = 0
 otherJobRole.style.display = 'none'
 shirtColor.style.display = 'none'
+paypal.style.display = 'none'
+bitcoin.style.display = 'none'
+
+payType.children[1].selected = true
 
 // -----------------------------------------------------------------------------------------------------------------
 // EVENT LISTENERS
@@ -60,7 +68,7 @@ shirtDesign.addEventListener('change', (e) => {
 
 registerForActivities.addEventListener('change', (e) => {
   const dataCost = e.target
-  let activityCost = +dataCost.getAttribute('data-cost')
+  const activityCost = +dataCost.getAttribute('data-cost')
 
   if (dataCost.checked) {
     sumOfCost += activityCost
@@ -68,4 +76,22 @@ registerForActivities.addEventListener('change', (e) => {
     sumOfCost -= activityCost
   }
   totalCost.innerHTML = `Total: $${sumOfCost}`
+})
+
+payType.addEventListener('change', (e) => {
+  const paymentInput = e.target.value
+
+  if (paymentInput === creditCard.id) {
+    creditCard.style.display = 'block'
+    paypal.style.display = 'none'
+    bitcoin.style.display = 'none'
+  } else if (paymentInput === paypal.id) {
+    paypal.style.input = 'block'
+    creditCard.style.display = 'none'
+    bitcoin.style.display = 'none'
+  } else if (paymentInput === bitcoin.id) {
+    bitcoin.style.display = 'block'
+    creditCard.style.display = 'none'
+    paypal.style.display = 'none'
+  }
 })
