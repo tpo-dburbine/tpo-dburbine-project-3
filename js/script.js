@@ -1,22 +1,31 @@
 // set focus on text field
-const focusText = document.querySelector('#name')
-focusText.focus()
+const nameField = document.querySelector('#name')
+nameField.focus()
 
 // -----------------------------------------------------------------------------------------------------------------
 // GLOBAL VARIABLES
 // -----------------------------------------------------------------------------------------------------------------
 
+const form = document.querySelector('form')
 const jobRole = document.querySelector('#title')
 const otherJobRole = document.querySelector('#other-job-role')
 const shirtDesign = document.querySelector('#design')
 const shirtColor = document.querySelector('#shirt-colors')
 const colorOptions = document.querySelector('#color')
 const registerForActivities = document.querySelector('#activities')
+const checkboxes = document.querySelectorAll('input[type=checkbox]')
 const totalCost = document.querySelector('#activities-cost')
 const payType = document.querySelector('#payment')
 const creditCard = document.querySelector('#credit-card')
+const creditCardNumber = document.querySelector('#cc-num')
+const zipCode = document.querySelector('#zip')
+const cvv = document.querySelector('#cvv')
+const creditCardMonth = document.querySelector('#exp-month')
+const creditCardYear = document.querySelector('#exp-year')
 const paypal = document.querySelector('#paypal')
 const bitcoin = document.querySelector('#bitcoin')
+const emailAddress = document.querySelector('#email')
+
 let sumOfCost = 0
 otherJobRole.style.display = 'none'
 shirtColor.style.display = 'none'
@@ -93,5 +102,50 @@ payType.addEventListener('change', (e) => {
     bitcoin.style.display = 'block'
     creditCard.style.display = 'none'
     paypal.style.display = 'none'
+  }
+})
+
+form.addEventListener('submit', (e) => {
+  const nameInput = nameField.value
+  const emailInput = emailAddress.value
+  const creditNumInput = creditCardNumber.value
+  const zipCodeInput = zipCode.value
+  const cvvInput = cvv.value
+  const expMonth = creditCardMonth.value
+  const expYear = creditCardYear.value
+
+  const regName = /^[A-Za-z]+ ?[A-Za-z]*?$/.test(nameInput)
+  const regEmail = /[^@]+@[^@.]+\.[a-z]+$/i.test(emailInput)
+  const regCreditNum = /^\d{13}\d?\d?\d?$/.test(creditNumInput)
+  const regZipCode = /^\d{5}$/.test(zipCodeInput)
+  const regCVV = /^\d{3}$/.test(cvvInput)
+
+  let checkedNum = 0
+  let activitiesValid
+
+  for (let i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked) {
+      checkedNum++
+    }
+  }
+
+  if (checkedNum > 0) {
+    activitiesValid = true
+  } else {
+    activitiesValid = false
+  }
+
+  if (payType.value === 'credit-card') {
+    if (!regCreditNum || !regZipCode || !regCVV || expMonth.value === 'Select Date' || expYear === 'Select Year') {
+      e.preventDefault()
+    }
+  }
+
+  if (!regName) {
+    e.preventDefault()
+  } else if (!regEmail) {
+    e.preventDefault()
+  } else if (!activitiesValid) {
+    e.preventDefault()
   }
 })
