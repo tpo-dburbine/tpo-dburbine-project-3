@@ -123,6 +123,10 @@ form.addEventListener('submit', (e) => {
   let checkedNum = 0
   let activitiesValid
 
+  const nameAlert = document.querySelector('#name-hint')
+  const emailAlert = document.querySelector('#email-hint')
+  const activitiesAlert = document.querySelector('#activities-hint')
+
   for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked) {
       checkedNum++
@@ -142,10 +146,47 @@ form.addEventListener('submit', (e) => {
   }
 
   if (!regName) {
+    nameAlert.parentElement.classList.remove('valid')
+    nameAlert.parentElement.classList.add('not-valid')
+    nameAlert.classList.remove('hint')
     e.preventDefault()
-  } else if (!regEmail) {
+  } else if (regName) {
+    nameAlert.classList.remove('not-valid')
+    nameAlert.classList.add('valid')
+    nameAlert.classList.add('hint')
+  } 
+  if (!regEmail) {
+    emailAlert.parentElement.classList.remove('valid')
+    emailAlert.parentElement.classList.add('not-valid')
+    emailAlert.classList.remove('hint')
     e.preventDefault()
-  } else if (!activitiesValid) {
+  } else if (regEmail) {
+    emailAlert.parentElement.classList.remove('not-valid')
+    emailAlert.parentElement.classList.add('valid')
+    emailAlert.classList.add('hint')
+  } 
+  if (!activitiesValid) {
+    activitiesAlert.parentElement.classList.remove('valid')
+    activitiesAlert.parentElement.classList.add('not-valid')
+    activitiesAlert.classList.remove('hint')
     e.preventDefault()
+  } else if (activitiesValid) {
+    activitiesAlert.parentElement.classList.remove('not-valid')
+    activitiesAlert.parentElement.classList.add('valid')
+    activitiesAlert.classList.add('hint')
   }
+})
+
+checkboxes.forEach((checkbox) => {
+  checkbox.addEventListener('focus', (e) => {
+    const parentFocused = e.target.parentNode
+    parentFocused.classList.add('focus')
+  })
+})
+
+checkboxes.forEach((checkbox) => {
+  checkbox.addEventListener('blur', (e) => {
+    const parentBlurred = e.target.parentNode
+    parentBlurred.classList.remove('focus')
+  })
 })
