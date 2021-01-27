@@ -10,7 +10,7 @@ const form = document.querySelector('form')
 const jobRole = document.querySelector('#title')
 const otherJobRole = document.querySelector('#other-job-role')
 const shirtDesign = document.querySelector('#design')
-const shirtColor = document.querySelector('#shirt-colors')
+// const shirtColor = document.querySelector('#shirt-colors')
 const colorOptions = document.querySelector('#color')
 const registerForActivities = document.querySelector('#activities')
 const checkboxes = document.querySelectorAll('input[type=checkbox]')
@@ -20,15 +20,13 @@ const creditCard = document.querySelector('#credit-card')
 const creditCardNumber = document.querySelector('#cc-num')
 const zipCode = document.querySelector('#zip')
 const cvv = document.querySelector('#cvv')
-const creditCardMonth = document.querySelector('#exp-month')
-const creditCardYear = document.querySelector('#exp-year')
 const paypal = document.querySelector('#paypal')
 const bitcoin = document.querySelector('#bitcoin')
 const emailAddress = document.querySelector('#email')
 
 let sumOfCost = 0
 otherJobRole.style.display = 'none'
-shirtColor.style.display = 'none'
+colorOptions.disabled = true
 paypal.style.display = 'none'
 bitcoin.style.display = 'none'
 
@@ -48,7 +46,7 @@ jobRole.addEventListener('change', (e) => {
 })
 
 shirtDesign.addEventListener('change', (e) => {
-  shirtColor.style.display = 'block'
+  colorOptions.disabled = false
 
   if (e.target.value === 'heart js') {
     for (let i = 0; i < colorOptions.length; i++) {
@@ -76,10 +74,27 @@ shirtDesign.addEventListener('change', (e) => {
 })
 
 registerForActivities.addEventListener('change', (e) => {
-  const dataCost = e.target
-  const activityCost = +dataCost.getAttribute('data-cost')
+  const clickedActivity = e.target
+  const activityCost = +clickedActivity.getAttribute('data-cost')
+  const activityTime = clickedActivity.getAttribute('data-day-and-time')
 
-  if (dataCost.checked) {
+  for (let i = 0; i < checkboxes.length; i++) {
+    const conflictingTime = checkboxes[i].getAttribute('data-day-and-time')
+
+    if (clickedActivity !== checkboxes[i] && activityTime === conflictingTime) {
+      checkboxes[i].disabled = true
+
+      if (clickedActivity.checked) {
+        checkboxes[i].disabled = true
+        checkboxes[i].parentElement.classList.add('disabled')
+      } else {
+        checkboxes[i].disabled = false
+        checkboxes[i].parentElement.classList.remove('disabled')
+      }
+    }
+  }
+
+  if (clickedActivity.checked) {
     sumOfCost += activityCost
   } else {
     sumOfCost -= activityCost
@@ -111,8 +126,6 @@ form.addEventListener('submit', (e) => {
   const creditNumInput = creditCardNumber.value
   const zipCodeInput = zipCode.value
   const cvvInput = cvv.value
-  const expMonth = creditCardMonth.value
-  const expYear = creditCardYear.value
 
   const regName = /^[A-Za-z]+ ?[A-Za-z]*?$/.test(nameInput)
   const regEmail = /[^@]+@[^@.]+\.[a-z]+$/i.test(emailInput)
@@ -126,6 +139,9 @@ form.addEventListener('submit', (e) => {
   const nameAlert = document.querySelector('#name-hint')
   const emailAlert = document.querySelector('#email-hint')
   const activitiesAlert = document.querySelector('#activities-hint')
+  const cardNumAlert = document.querySelector('#cc-hint')
+  const zipCodeAlert = document.querySelector('#zip-hint')
+  const cvvAlert = document.querySelector('#cvv-hint')
 
   for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked) {
@@ -140,8 +156,35 @@ form.addEventListener('submit', (e) => {
   }
 
   if (payType.value === 'credit-card') {
-    if (!regCreditNum || !regZipCode || !regCVV || expMonth.value === 'Select Date' || expYear === 'Select Year') {
+    if (!regCreditNum) {
+      cardNumAlert.parentNode.classList.remove('valid')
+      cardNumAlert.parentNode.classList.add('not-valid')
+      cardNumAlert.classList.remove('hint')
       e.preventDefault()
+    } else if (regCreditNum) {
+      cardNumAlert.parentNode.classList.remove('not-valid')
+      cardNumAlert.parentNode.classList.add('valid')
+      cardNumAlert.classList.add('hint')
+    }
+    if (!regZipCode) {
+      zipCodeAlert.parentNode.classList.remove('valid')
+      zipCodeAlert.parentNode.classList.add('not-valid')
+      zipCodeAlert.classList.remove('hint')
+      e.preventDefault()
+    } else if (regZipCode) {
+      zipCodeAlert.parentNode.classList.remove('not-valid')
+      zipCodeAlert.parentNode.classList.add('valid')
+      zipCodeAlert.classList.add('hint')
+    }
+    if (!regCVV) {
+      cvvAlert.parentNode.classList.remove('valid')
+      cvvAlert.parentNode.classList.add('not-valid')
+      cvvAlert.classList.remove('hint')
+      e.preventDefault()
+    } else if (regCVV) {
+      cvvAlert.parentNode.classList.remove('not-valid')
+      cvvAlert.parentNode.classList.add('valid')
+      cvvAlert.classList.add('hint')
     }
   }
 
@@ -154,8 +197,13 @@ form.addEventListener('submit', (e) => {
     nameAlert.classList.remove('not-valid')
     nameAlert.classList.add('valid')
     nameAlert.classList.add('hint')
-  } 
+  }
   if (!regEmail) {
+    if (emailInput === '') {
+      emailAlert.textContent = 'Oops! Email address field was left blank.'
+    } else {
+      emailAlert.textContent = 'Oops! Email address in incomplete/must be formatted properly.'
+    }
     emailAlert.parentElement.classList.remove('valid')
     emailAlert.parentElement.classList.add('not-valid')
     emailAlert.classList.remove('hint')
@@ -164,7 +212,7 @@ form.addEventListener('submit', (e) => {
     emailAlert.parentElement.classList.remove('not-valid')
     emailAlert.parentElement.classList.add('valid')
     emailAlert.classList.add('hint')
-  } 
+  }
   if (!activitiesValid) {
     activitiesAlert.parentElement.classList.remove('valid')
     activitiesAlert.parentElement.classList.add('not-valid')
