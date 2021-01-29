@@ -45,8 +45,8 @@ function validName () {
     nameAlert.parentElement.classList.add('not-valid')
     nameAlert.classList.remove('hint')
   } else if (regName) {
-    nameAlert.classList.remove('not-valid')
-    nameAlert.classList.add('valid')
+    nameAlert.parentElement.classList.remove('not-valid')
+    nameAlert.parentElement.classList.add('valid')
     nameAlert.classList.add('hint')
   }
   return regName
@@ -188,7 +188,7 @@ shirtDesign.addEventListener('change', (e) => {
       }
     }
   } else if (e.target.value === 'js puns') {
-    for (let i = 0; colorOptions.length; i++) {
+    for (let i = 0; i < colorOptions.length; i++) {
       const theme = colorOptions[i].getAttribute('data-theme')
 
       if (theme === e.target.value) {
@@ -241,7 +241,7 @@ payType.addEventListener('change', (e) => {
     paypal.style.display = 'none'
     bitcoin.style.display = 'none'
   } else if (paymentInput === paypal.id) {
-    paypal.style.input = 'block'
+    paypal.style.display = 'block'
     creditCard.style.display = 'none'
     bitcoin.style.display = 'none'
   } else if (paymentInput === bitcoin.id) {
